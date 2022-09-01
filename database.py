@@ -45,6 +45,9 @@ class SetOfFlashcards(base):
 
 
 if __name__ == '__main__':
-    base.metadata.create_all(engine)
+    # base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
+    user_name = "wojtek"
+    sets_of_flashcards = session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name).all()
+    print(sets_of_flashcards)

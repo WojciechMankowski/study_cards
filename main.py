@@ -1,11 +1,20 @@
 from fastapi import FastAPI
-from sqlalchemy import create_engine, update
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import User, Flashcard, SetOfFlashcards
+from fastapi.middleware.cors import CORSMiddleware
 
 # stworzenie aplikacji FastAPI
 app = FastAPI()
+origins = ["*"]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # creating connection to database and sessionmaker
 engine = create_engine('sqlite:///flashcards.sqlite', echo=True)
 Session = sessionmaker(bind=engine)
@@ -13,14 +22,11 @@ session = Session()
 
 @app.get("/user/{user_name}")
 async def get_user(user_name: str):
-    user = session.query(User).filter(User.name == user_name).first()
-    return user.dataToJSON()
+    return session.query(User).filter(User.name == user_name).first()
 
 @app.get("/{user_name}/sets")
 async def get_sets_of_flashcards(user_name: str):
-    sets_of_flashcards = session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name).all()
-    print(sets_of_flashcards)
-    return {}
+    return session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name).all()
 
 @app.post("/add_set/")
 async def add_set_of_flashcards(user_name: str, name_set: str):
