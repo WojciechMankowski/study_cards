@@ -27,7 +27,14 @@ async def get_user(user_name: str):
 @app.get("/{user_name}/sets")
 async def get_sets_of_flashcards(user_name: str):
     return session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name).all()
-
+@app.get("/get_flashcard/{user_name}/{name_set}")
+async def get_flashcards(name_set: str, user_name: str):
+    set_of_flashcards = session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name,
+                                                              SetOfFlashcards.name_set == name_set).all()
+    flashcard = []
+    for i in set_of_flashcards:
+        flashcard.append(session.query(Flashcard).filter(Flashcard.id == i.set_flascards).all()[0])
+    return flashcard
 @app.post("/add_set/")
 async def add_set_of_flashcards(user_name: str, name_set: str):
     set_of_flashcards = SetOfFlashcards(name_user=user_name, name_set=name_set)
@@ -42,10 +49,9 @@ def add_flascard_to_set(name_set_of_flashcards, flashcard: Flashcard, user_name:
     session.add(set_of_flashcards)
     session.commit()
 
-@app.post("/flashcards")
-async def add_flashcard(notion: str,
-                        definition: str, name_image: str,
-                        categories: str, name_set: str, nameuser: str):
+@app.post("/flashcards/{notion}/{definition}/{name_set}/{nameuser}")
+async def add_flashcard(notion: str, definition: str, name_set: str,
+                        nameuser: str, name_image: str="", categories: str= "uczę się",):
     flashcard = Flashcard(notion=notion, definition=definition, name_image=name_image, categories=categories)
     session.add(flashcard)
     session.commit()
