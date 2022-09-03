@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import User, Flashcard, SetOfFlashcards
 from fastapi.middleware.cors import CORSMiddleware
-
+# uvicorn main:app --reload
 # stworzenie aplikacji FastAPI
 app = FastAPI()
 origins = ["*"]
@@ -85,4 +85,4 @@ async def update_flashcard(notion: str, categories: str):
     flashcard = session.query(Flashcard).filter(Flashcard.notion == notion).first()
     flashcard.categories = categories
     session.commit()
-    return {"message": "flashcard updated"}
+    return {f"Fiszka ({notion}) zmieniła status na ": categories}
