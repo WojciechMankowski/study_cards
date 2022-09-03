@@ -49,13 +49,5 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
     user_name = "wojtek"
-    name_set = "Animals"
-    set_of_flashcards = session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name,
-    SetOfFlashcards.name_set == name_set).all()
-    print(set_of_flashcards)
-    flashcard = []
-    for i in set_of_flashcards:
-        print("i"*5)
-        flashcard.append(session.query(Flashcard).filter(Flashcard.id == i.set_flascards).all()[0])
-    # flashcard = session.query(Flashcard).filter(Flashcard.id == set_of_flashcards.set_flascards).all()
-    print(flashcard)
+    x  = session.query(SetOfFlashcards).filter(SetOfFlashcards.name_user == user_name).all()
+    print(x)
