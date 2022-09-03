@@ -3,8 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import User, Flashcard, SetOfFlashcards
 from fastapi.middleware.cors import CORSMiddleware
+
 # uvicorn main:app --reload
+
 # stworzenie aplikacji FastAPI
+
 app = FastAPI()
 origins = ["*"]
 
